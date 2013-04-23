@@ -2,6 +2,7 @@
  * jQuery Screen Control
  * Author: Crowd Favorite
  * Description: Provides a lightweight interface for detecting and storing screen properties and events.
+ * Version: 1.0
  */
 (function() {
 	"use strict";
