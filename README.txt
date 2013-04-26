@@ -13,5 +13,8 @@
 
 ## Changelog
 
+### 1.1-indev
+- Added scroll directions to scroll event data.
+
 ### 1.0
 - Initial release

@@ -2,7 +2,7 @@
  * jQuery Screen Control
  * Author: Crowd Favorite
  * Description: Provides a lightweight interface for detecting and storing screen properties and events.
- * Version: 1.0
+ * Version: 1.1-dev
  */
 (function() {
 	"use strict";
@@ -12,6 +12,8 @@
 			"height": 0,
 			"width": 0,
 			"top": 0,
+			"left": 0,
+			"right"; 0,
 			"bottom": 0,
 			"initialized": false,
 			"resized": true,
@@ -24,6 +26,8 @@
 				window.screenData.width = (screen && screen.width < $window.width()) ? screen.width : $window.width(),
 				window.screenData.top = $window.scrollTop(),
 				window.screenData.bottom = window.screenData.height + window.screenData.top;
+				window.screenData.left = $window.scrollLeft(),
+				window.screenData.right = $window.screenData.left + window.screenData.width;
 				if (window.screenData.height > window.screenData.width) {
 					window.screenData.orientation = "portrait";
 				}
@@ -32,7 +36,7 @@
 				}
 			},
 			"init": function() {
-				var $window = jQuery(window);
+				var $window = jQuery(window), changed = false, scrollVertical, scrollHorizontal;
 				if (window.screenData.initialized) { return; }
 				window.screenData.initialized = true;
 				window.screenData.refresh();
@@ -41,12 +45,14 @@
 					if (changed) {
 						changed = false;
 					
-						window.screenData.scrolled = (window.screenData.top !== $window.scrollTop());
+						scrollVertical = $window.scrollTop() - window.screenData.top;
+						scrollHorizontal = $window.scrollLeft() - window.screenData.left;
+						window.screenData.scrolled = !(scrollVertical === 0 && scrollHorizontal === 0);
 						window.screenData.resized = (window.screenData.height !== $window.height() || window.screenData.width !== $window.width());
 
 						window.screenData.refresh();
 						if (window.screenData.scrolled) {
-							jQuery("body").trigger("screendata-scrolled");
+							jQuery("body").trigger("screendata-scrolled", { "vertical": scrollVertical, "horizontal": scrollHorizontal });
 						}
 						if (window.screenData.resized) {
 							jQuery("body").trigger("screendata-resized");
